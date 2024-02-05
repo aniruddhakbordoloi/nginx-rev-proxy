@@ -1,0 +1,41 @@
+Create a Spring boot starter project with Spring web dependency from https://start.spring.io/
+
+https://www.seancdavis.com/posts/three-ways-to-add-image-to-github-readme/
+
+https://www.youtube.com/watch?v=lZVAI3PqgHc
+
+install nginx:
+    brew install nginx (for Mac)
+    post installation nginx location: /opt/homebrew/opt/nginx/bin/nginx (for Mac M2)
+    post installation nginx conf file: /opt/homebrew/etc/nginx/nginx.conf (for Mac M2)
+    conf file sample added in this folder
+nginx with brew (for Mac):
+    start: brew services start nginx
+    stop: brew services stop nginx
+    re-start: brew services restart nginx
+    list all: brew services list
+nginx logs:
+    /opt/homebrew/var/log/nginx/access.log
+    /opt/homebrew/var/log/nginx/error.log
+
+hosts file:
+    location (in Mac): /etc/hosts
+    sample hosts file added in this folder
+
+For forward proxy, this is what you will need to add:
+    in the hosts file (at location /etc/hosts in mac M2):
+        127.0.0.1   mykubeapi
+    in nginx file (at location /opt/homebrew/etc/nginx/nginx.conf in mac M2):
+        server {
+                listen       80;
+                server_name  mykubeapi;
+                location / {
+                            proxy_pass http://localhost:8081;
+                            proxy_set_header Host $host;
+                            proxy_set_header X-Real-IP $remote_addr;
+                            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+                            proxy_set_header X-Forwarded-Proto $scheme;
+                           }
+                }
+    Now access url without port and with your domain name:
+        http://mykubeapi/greeting

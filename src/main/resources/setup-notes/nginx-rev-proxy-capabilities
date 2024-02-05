@@ -1,0 +1,47 @@
+An NGINX reverse proxy is a server configuration that handles incoming client requests and forwards them to one or more backend servers. Unlike a forward proxy, which handles requests on behalf of clients to access external servers, a reverse proxy acts on behalf of backend servers to manage incoming client requests.
+
+Here's a breakdown of the key characteristics and uses of an NGINX reverse proxy:
+
+1. **Request Handling:**
+   - **Incoming Requests:** The reverse proxy accepts incoming client requests on behalf of backend servers.
+   - **Backend Servers:** These are the actual servers that host the application or service.
+
+2. **Load Balancing:**
+   - A common use of an NGINX reverse proxy is to distribute incoming requests among multiple backend servers, balancing the load to ensure optimal performance and resource utilization.
+
+3. **SSL Termination:**
+   - The reverse proxy can handle SSL/TLS termination, offloading the burden of encrypting and decrypting traffic from the backend servers. This is particularly useful for improving performance and simplifying certificate management.
+
+4. **Caching:**
+   - NGINX reverse proxies can be configured to cache static content or even dynamic content, reducing the load on backend servers and improving response times for frequently requested resources.
+
+5. **Security:**
+   - The reverse proxy acts as a barrier between the internet and the backend servers, providing an additional layer of security. It can help protect against certain types of attacks, such as Distributed Denial of Service (DDoS) attacks, by filtering and managing incoming traffic.
+
+6. **Application Firewall:**
+   - NGINX reverse proxies can be configured with security features, such as an application firewall, to inspect and filter incoming requests, protecting against common web application vulnerabilities.
+
+7. **Content Compression:**
+   - The reverse proxy can compress content before sending it to clients, reducing bandwidth usage and improving page load times.
+
+8. **URL Rewriting and Redirection:**
+   - NGINX can perform URL rewriting and redirection, allowing you to present a clean and consistent URL structure to clients or redirecting requests to different backend servers based on certain criteria.
+
+Here's a simple example of an NGINX reverse proxy configuration:
+
+```nginx
+server {
+    listen 80;
+    server_name example.com;
+
+    location / {
+        proxy_pass http://backend_servers;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+}
+```
+
+In this example, NGINX listens on port 80 for requests to "example.com" and forwards them to the backend servers specified in the `proxy_pass` directive. It also sets headers to pass information about the original client request to the backend servers using `X-Real-IP`, `X-Forwarded-For`, and `X-Forwarded-Proto`.
